@@ -26,4 +26,4 @@
 *.txt
 *.uml
 *.uml~
-
+*.DS_Store
