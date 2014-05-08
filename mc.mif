@@ -1,0 +1,13 @@
+
+0 : B;	% @init	CPY %
+1 : 1;	% SUB %
+2 : B;	% CPY %
+3 : 2;	% @stuff INC %
+4 : B;	% CPY %
+5 : 0;	% ADD %
+6 : 3;	% DEC %
+7 : 4;	% NOT %
+8 : 5;	% AND %
+9 : 6;	% OR %
+10 : 7;	% SHR %
+16 : A;	% SWAP %
