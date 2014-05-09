@@ -1,0 +1,11 @@
+;Comment1
+;Line 2
+ADD;
+SUB;
+INC;
+DEC;
+OR;
+SHR;
+PUSH;
+@end POP;
+PUSH;

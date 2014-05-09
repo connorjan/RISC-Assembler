@@ -23,7 +23,6 @@
 # Other
 *.doc
 *.docx
-*.txt
 *.uml
 *.uml~
 *.DS_Store

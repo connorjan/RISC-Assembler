@@ -1,0 +1,23 @@
+;Fake Assembly Tester
+;MOAR COMMENTS
+@init 	CPY
+		SUB;
+		CPY;
+@stuff		INC;
+CPY;
+		ADD;
+		DEC;
+		NOT;
+		AND;
+		OR;
+		SHR;
+		JMPU @next  ;  	     
+;This is pointless.....
+@next		IN;
+		OUT;
+		WR 0x71;
+		RD 0x71;
+		SWAP;
+		JMPC @init;
+		ADD;
+;I question things.
