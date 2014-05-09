@@ -4,22 +4,29 @@
 
 using namespace std;
 
-int main(void)
+int main(int argc, char* argv[])
 {
-	
+	//cout << argc << endl; //Number of Params
+	//cout << argv[0] << endl; //Path to executable
+	//cout << argv[1] << endl; //Any subsequent params
+
 	//cout << "Please enter the filename of the assembly file: ";
-	string fileName;
-	fileName = "t.txt";
-	//cin >> fileName;
+	if (argc != 2)
+	{
+		cout << "usage: ./myAssembler <filename-path>" << endl;
+		return -1;
+	}
+	string inFileName = argv[1];
 
 	list<string> lines;
 	try
 	{
-		lines = openFile(fileName);
+		lines = openFile(inFileName);
 	}
 	catch(exception & ReadError)
 	{
-		cout << "File has not opened!" << endl;
+		cout << "myAssembler: error: no such file or directory: '" << inFileName << "'" << endl;
+		cout << "myAssembler: error: no input files" << endl;
 		return -1;
 	}
 
