@@ -3,9 +3,14 @@
 
 #include <string.h>
 #include <list>
+#include <vector>
+#include <map>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <ctype.h>
+#include <iomanip>
+#include <boost/algorithm/string/case_conv.hpp>
 
 using namespace std;
 
@@ -20,7 +25,6 @@ private:
 	string line;
 
 };
-
 
 
 class Simple : public Assembler
@@ -51,7 +55,6 @@ private:
 	int counter;
 	string opCode;
 	string comment;
-
 };
 
 #endif

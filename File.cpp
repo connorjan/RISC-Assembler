@@ -44,7 +44,7 @@ void print(list<string> l)
 	}
 }
 
-list<string> removeJunk(list<string> l)
+list<string> removeComments(list<string> l)
 {
 	string copy;
 	for (list<string>::iterator it = l.begin(); it != l.end(); ++it)
@@ -62,79 +62,148 @@ list<string> removeJunk(list<string> l)
 	return l;
 }
 
-int decodeLine(string line)
+
+
+
+vector<string> decodeLine(string line)
 {
+
+	vector<string> data(3);
+	// data[0] = opCode
+	// data[1] = before label
+	// data[2] = after label or address
+
+
+	string labelBefore;
+	string labelAfter;
+
+	int posEnd = 0;
+
 	//detects @ and removes
+
 	int posAt = line.find_first_of('@');
 	if (posAt != -1)
 	{
-		int posEnd = line.find_first_of(" \t", posAt);
-		//cout << posAt << " : " << posEnd << endl;
+		posEnd = line.find_first_of(" \t;", posAt);
+
+		//Checks to see if label is before or after OpCode
+		if (labelIsBefore(line))
+		{
+			data[1] = line.substr(posAt, posEnd-posAt);
+		}
+		else 
+		{
+			data[2] = line.substr(posAt, posEnd-posAt);
+		}
+
+		line.erase(posAt, posEnd-posAt);
+
+	}
+
+	posAt = line.find_first_of('@');
+	if (posAt != -1)
+	{
+		int posEnd = line.find_first_of(" \t;", posAt);
+
+		data[2] = line.substr(posAt, posEnd-posAt);
+
 		line.erase(posAt, posEnd-posAt);
 	}
 
 	//detects address and removes
-	int posAdrs = line.find_first_of('0');
-	if (posAdrs != -1)
+	int posZero = line.find_first_of('0');
+	int posX	= line.find_first_of('X');
+	int posx 	= line.find_first_of('x');
+
+	if (((posX-posZero == 1) or (posx-posZero==1)) and ((line[posZero-1] == ' ') or (line[posZero-1] == '\t')))
 	{
-		line.erase(posAdrs, 4);
+		data[2] = line.substr(posZero, 4);
+		line.erase(posZero, 4);
 	}
-
-
 
 		line.erase (remove ((line).begin(), (line).end(), ' '), (line).end());
 		(line).erase (remove ((line).begin(), (line).end(), '\t'), (line).end());
 		(line).erase (remove ((line).begin(), (line).end(), ';'), (line).end());
 
 
+		boost::to_upper(line);
+
 		if (line == "ADD") {
-			return 0;}
+			data[0] = "0";}
 		else if (line == "SUB") {
-			return 1;}
+			data[0] = "1";}
 		else if (line == "INC") {
-			return 2;}
+			data[0] = "2";}
 		else if (line == "DEC") {
-			return 3;}
+			data[0] = "3";}
 		else if (line == "NOT") {
-			return 4;}
+			data[0] = "4";}
 		else if (line == "AND") {
-			return 5;}
+			data[0] = "5";}
 		else if (line == "OR") {
-			return 6;}
+			data[0] = "6";}
 		else if (line == "SHR") {
-			return 7;}
+			data[0] = "7";}
 		else if (line == "JMPU") {
-			return 8;}
+			data[0] = "8";}
 		else if (line == "JMPC") {
-			return 9;}
+			data[0] = "9";}
 		else if (line == "SWAP") {
-			return 10;}
+			data[0] = "10";}
 		else if (line == "CPY") {
-			return 11;}
+			data[0] = "11";}
 		else if (line == "WR") {
-			return 12;}
+			data[0] = "12";}
 		else if (line == "RD") {
-			return 13;}
+			data[0] = "13";}
 		else if (line == "IN") {
-			return 14;}
+			data[0] = "14";}
 		else if (line == "OUT") {
-			return 15;}
+			data[0] = "15";}
 		else if (line == "PUSH") {
-			return 16;}
+			data[0] = "16";}
 		else if (line == "POP") {
-			return 17;}
+			data[0] = "17";}
 		else 
-			return -1;
+			data[0] = "-1";
+
+		return data;
 		
 }
 
-string getLabel(string line)
+bool labelIsBefore(string line)
 {
 	string label;
 
-	
-	return label;
+	line.erase (remove ((line).begin(), (line).end(), ' '), (line).end());
+	line.erase (remove ((line).begin(), (line).end(), '\t'), (line).end());
+
+	return (line[0]=='@');
 }
+
+string makeUpper(string line)
+{
+
+	for ( string::iterator it=line.begin(); it!=line.end(); ++it)
+    {
+    	*it = toupper(*it);
+    }
+
+	return line;
+}
+
+string toHex(int dec)
+{
+
+  stringstream stream;
+  stream << "0x" 
+         << setfill ('0') << setw(2) 
+         << hex << dec;
+  return stream.str();
+
+}
+
+
 
 
 

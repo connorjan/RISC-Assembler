@@ -12,10 +12,6 @@ ostream& operator << (ostream& out, const Simple& s)
 	return out;
 }
 
-Simple::Simple(string line, int counter, string opCode) : Assembler(line), line(line), counter(counter), opCode(opCode){}
-
-Simple::~Simple(){}
-
 void Simple::getComment()
 {
 	string line = this->line;

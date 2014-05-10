@@ -1,5 +1,9 @@
 #include "SimpleInst.h"
 
+Simple::Simple(string line, int counter, string opCode) : Assembler(line), line(line), counter(counter), opCode(opCode){}
+
+Simple::~Simple(){}
+
 AddInst::AddInst(string line, int counter) : Simple(line, counter, "0"), line(line), opCode("0"), counter(counter){}
 
 AddInst::~AddInst(){}

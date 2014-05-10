@@ -10,7 +10,6 @@ int main(int argc, char* argv[])
 	//cout << argv[0] << endl; //Path to executable
 	//cout << argv[1] << endl; //Any subsequent params
 
-	//cout << "Please enter the filename of the assembly file: ";
 	if (argc != 2)
 	{
 		cout << "usage: ./myAssembler <filename-path>" << endl;
@@ -30,7 +29,7 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 
-	lines = removeJunk(lines);
+	lines = removeComments(lines);
 
 	int counter = 0;
 
@@ -38,10 +37,57 @@ int main(int argc, char* argv[])
 	myfile.open ("mc.mif");
 
 	Assembler *myInst;
-	for (list<string>::iterator it = lines.begin(); it != lines.end(); ++it)
+	vector<string> data(3);
+
+	map<string,string> labels;
+
+	list<string>::iterator it;
+
+	//Decodes for labels
+	for (it = lines.begin(); it != lines.end(); ++it)
 	{
-			
-		switch (decodeLine(*it))
+		data = decodeLine(*it);
+		int opCode = stoi(data[0]);
+
+		if (data[1] != "")
+		{
+			labels[data[1]] = toHex(counter);
+		}
+
+		//Handles the counter
+		if ((opCode == 8) or (opCode == 9) or (opCode == 12) or (opCode == 13))
+		{
+			counter = counter+2;
+		}
+		else if ((opCode == 14) or (opCode == 15))
+		{
+			counter++;
+		}
+
+		counter++;
+	}
+
+
+	//Print map for verification
+	map<string, string>::iterator pos;
+    for(pos = labels.begin(); pos != labels.end(); ++pos)
+    {
+         cout << "Key: " << pos->first << endl;
+         cout << "Value: " << pos->second << endl;
+    }
+
+
+
+
+	//Decodes and outputs to mif 
+	counter = 0;
+
+	for (it = lines.begin(); it != lines.end(); ++it)
+	{
+		data = decodeLine(*it);
+		int opCode = stoi(data[0]);
+		
+		switch (opCode)
 		{
 			case 0:
 				
@@ -50,6 +96,8 @@ int main(int argc, char* argv[])
 				((Simple*)myInst)->getComment();
 
 				myfile << endl << *((Simple*)myInst);
+
+				//CHECK TO MAKE SURE DATA[2] IS EMPTY!!!!
 
 				delete myInst;
 				break;
@@ -132,10 +180,11 @@ int main(int argc, char* argv[])
 				break;
 
 			case 8:
+				counter = counter + 2;
 				break;
 
 			case 9:
-
+				counter = counter + 2;
 				break;
 				
 			case 10:
@@ -162,19 +211,19 @@ int main(int argc, char* argv[])
 				break;
 
 			case 12:
-
+				counter = counter + 2;
 				break;
 				
 			case 13:
-
+				counter = counter + 2;
 				break;
 
 			case 14:
-
+				counter++;
 				break;
 
 			case 15:
-
+				counter++;
 				break;
 				
 			case 16:
@@ -200,7 +249,7 @@ int main(int argc, char* argv[])
 				break;
 
 			default:
-				cout << "Invalid Instruction on line:\t" << *it << endl;
+				cout << "Invalid Instruction on line: " << *it << endl;
 		}
 
 		counter ++;

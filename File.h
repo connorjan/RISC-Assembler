@@ -7,8 +7,14 @@ list<string> openFile(string);
 
 void print(list<string>);
 
-list<string> removeJunk(list<string>);
+list<string> removeComments(list<string>);
 
-int decodeLine(string line);
+vector<string> decodeLine(string);
+
+string makeUpper(string);
+
+bool labelIsBefore(string);
+
+string toHex(int);
 
 #endif
