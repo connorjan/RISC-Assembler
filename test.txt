@@ -1,3 +1,7 @@
-@init ADD;
-	SUB;
-	WR @init;
+not;
+sub;
+add;
+dec;
+dec;
+swap;
+sub;

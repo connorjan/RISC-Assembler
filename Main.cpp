@@ -11,12 +11,66 @@ int main(int argc, char* argv[])
 	//cout << argv[0] << endl; //Path to executable
 	//cout << argv[1] << endl; //Any subsequent params
 
-	if (argc != 2)
+	if (argc < 2)
 	{
-		cout << "usage: ./myAssembler <filename-path>" << endl;
+		cout << "usage: ./myAssembler [--help] <filename-path> [-d <depth>]" << endl;
 		return -1;
 	}
+
 	string inFileName = argv[1];
+
+	string temp;
+	string temp2;
+	string width = "1";
+	string depth = "256";
+	string mode;
+
+	//Make it so user can do ./myAssembler --help without error about no input file!
+
+	for (int i = 2; i < argc-1; i++)
+	{
+		temp = argv[i];
+		temp2 = argv[i+1];
+
+		if (temp == "--help")
+		{
+			cout 	<< "usage: ./myAssembler [--help] <filename-path> [-d <depth>]" << endl 
+					<< endl
+					<< "Options:" << endl
+					<< "--help\t\tDisplay available options" << endl
+					<< "-d <value>\t\tSet the depth of the .mif file" << endl
+					<< "-h\t\tSet the architecture mode to Harvard" << endl
+					<< "-o\t\tSpecify the output file name" << endl
+					<< "-v\t\tSet the architecture mode to Von Neumann" << endl;
+		}
+
+		else if ((temp == "-d"))
+		{
+			depth = temp2;
+
+			//Make sure temp2 is a number!
+			i++;
+		}
+
+		else if (temp == "-h")
+		{
+			mode = "h";
+		}
+
+		else if (temp == "-v")
+		{
+			mode = "v";
+		}
+
+		else
+		{
+			cout << "Unknown option: " << argv[i] << endl;
+			cout << "usage: ./myAssembler [--help] <filename-path> [-d <depth>]" << endl;
+			return -1;
+		}
+	}
+
+
 
 	list<string> lines;
 	try
@@ -45,7 +99,7 @@ int main(int argc, char* argv[])
 
 	list<string>::iterator it;
 
-	myfile << writeHeader(inFileName);
+	myfile << writeHeader(inFileName, width, depth);
 
 	//Decodes for labels
 	for (it = lines.begin(); it != lines.end(); ++it)
@@ -231,13 +285,17 @@ int main(int argc, char* argv[])
 
 			case 8:
 
-				if (labels[data[2]] == "")
+				if (data[2] == "")
 				{
-					cout << "error!" << endl;
+					cout << "No argument" << endl;
 				}
 
 				if (data[2].at(0) == '@')
 				{
+					if (labels[data[2]] == "")
+					{
+						cout << "label not defined: " << data[2] << endl;
+					}
 					address = labels[data[2]];
 				}
 				else if (data[2].at(0) == '0')
@@ -266,13 +324,17 @@ int main(int argc, char* argv[])
 
 			case 9:
 
-				if (labels[data[2]] == "")
+				if (data[2] == "")
 				{
-					cout << "error!" << endl;
+					cout << "no argument" << endl;
 				}
 
 				if (data[2].at(0) == '@')
 				{
+					if (labels[data[2]] == "")
+					{
+						cout << "label not defined: " << data[2] << endl;
+					}
 					address = labels[data[2]];
 				}
 				else if (data[2].at(0) == '0')
@@ -335,14 +397,14 @@ int main(int argc, char* argv[])
 
 			case 12:
 
-				if (labels[data[2]] == "")
+				if (data[2] == "")
 				{
-					cout << "error!" << endl;
+					cout << "No argument" << endl;
 				}
 
 				if (data[2].at(0) == '@')
 				{
-					cout << "Error!" << endl;
+					cout << "Can't wr to label" << endl;
 					break;
 				}
 				else if (data[2].at(0) == '0')
@@ -371,14 +433,14 @@ int main(int argc, char* argv[])
 				
 			case 13:
 
-				if (labels[data[2]] == "")
+				if (data[2] == "")
 				{
-					cout << "error!" << endl;
+					cout << "No argument" << endl;
 				}
 
 				if (data[2].at(0) == '@')
 				{
-					cout << "Error!" << endl;
+					cout << "Cant rd from label!" << endl;
 					break;
 				}
 				else if (data[2].at(0) == '0')
@@ -407,14 +469,14 @@ int main(int argc, char* argv[])
 
 			case 14:
 
-				if (labels[data[2]] == "")
+				if (data[2] == "")
 				{
-					cout << "error!" << endl;
+					cout << "No argument" << endl;
 				}
 
 				if (data[2].at(0) == '@')
 				{
-					cout << "Error!" << endl;
+					cout << "cant in from label!" << endl;
 					break;
 				}
 				else if (data[2].at(0) == '0')
@@ -443,14 +505,14 @@ int main(int argc, char* argv[])
 
 			case 15:
 
-				if (labels[data[2]] == "")
+				if (data[2] == "")
 				{
-					cout << "error!" << endl;
+					cout << "No argument" << endl;
 				}
 
 				if (data[2].at(0) == '@')
 				{
-					cout << "Error!" << endl;
+					cout << "cant out from label!" << endl;
 					break;
 				}
 				else if (data[2].at(0) == '0')

@@ -192,15 +192,15 @@ string toHex(int dec)
   return stream.str();
 }
 
-string writeHeader(string fileName)
+string writeHeader(string fileName, string width, string depth)
 {
 	stringstream stream;
 
 	stream 	<< "-- " << fileName << endl
 			<< "-- Created with RISC Assembler by Connor Goldberg and Matthew Zachary" << endl
 			<< endl
-			<< "WIDTH = " << "1" << ";" << endl
-			<< "DEPTH = " << "256" << ";" << endl
+			<< "WIDTH = " << width << ";" << endl
+			<< "DEPTH = " << depth << ";" << endl
 			<< "ADDRESS_RADIX = HEX;" << endl
 			<< "DATA_RADIX = HEX;" << endl
 			<< endl

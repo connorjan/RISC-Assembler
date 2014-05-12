@@ -1,4 +1,4 @@
--- test.txt
+-- mult.txt
 -- Created with RISC Assembler by Connor Goldberg and Matthew Zachary
 
 WIDTH = 1;
@@ -8,7 +8,92 @@ DATA_RADIX = HEX;
 
 CONTENT BEGIN
 
-00 : 0;	% ADD %
+00 : B;	% CPY %
 01 : 1;	% SUB %
+02 : 2;	% INC %
+03 : C;	% WR %
+04 : 5;
+05 : 0;
+06 : E;	% IN %
+07 : 1;
+08 : 4;	% NOT %
+09 : 7;	% SHR %
+0A : 9;	% JMPC %
+0B : 0;
+0C : 6;
+0D : E;	% IN %
+0E : 1;
+0F : 7;	% SHR %
+10 : 9;	% JMPC %
+11 : 0;
+12 : D;
+13 : D;	% RD %
+14 : 5;
+15 : 0;
+16 : 7;	% SHR %
+17 : C;	% WR %
+18 : 5;
+19 : 0;
+1A : 9;	% JMPC %
+1B : 2;
+1C : 5;
+1D : E;	% IN %
+1E : 0;
+1F : C;	% WR %
+20 : 5;
+21 : 1;
+22 : 8;	% JMPU %
+23 : 0;
+24 : 6;
+25 : E;	% IN %
+26 : 0;
+27 : C;	% WR %
+28 : 5;
+29 : 2;
+2A : B;	% CPY %
+2B : 1;	% SUB %
+2C : C;	% WR %
+2D : 5;
+2E : 3;
+2F : B;	% CPY %
+30 : D;	% rd %
+31 : 5;
+32 : 2;
+33 : 3;	% dec %
+34 : C;	% wr %
+35 : 5;
+36 : 2;
+37 : 9;	% jmpc %
+38 : 4;
+39 : C;
+3A : D;	% rd %
+3B : 5;
+3C : 1;
+3D : 0;	% add %
+3E : B;	% cpy %
+3F : 9;	% jmpc %
+40 : 3;
+41 : 0;
+42 : D;	% rd %
+43 : 5;
+44 : 3;
+45 : 2;	% inc %
+46 : C;	% wr %
+47 : 5;
+48 : 3;
+49 : 8;	% jmpu %
+4A : 3;
+4B : 0;
+4C : A;	% swap %
+4D : F;	% out %
+4E : 3;
+4F : D;	% rd %
+50 : 5;
+51 : 3;
+52 : F;	% out %
+53 : 2;
+54 : 8;	% jmpu %
+55 : 0;
+56 : 0;
 
 END;
