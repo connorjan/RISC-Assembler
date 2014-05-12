@@ -1,7 +1,0 @@
-not;
-sub;
-add;
-dec;
-dec;
-swap;
-sub;
