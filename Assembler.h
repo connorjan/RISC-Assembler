@@ -35,6 +35,7 @@ public:
 	~Simple();
 	void getComment();
 	friend ostream& operator << (ostream&, const Simple&);
+
 private:
 	string line;
 	int counter;
@@ -46,15 +47,17 @@ class Advanced : public Assembler
 {
 
 public:
-	Advanced(string, int, string);
+	Advanced(string, int, string, string);
 	~Advanced();
 	void getComment();
+	friend ostream& operator << (ostream&, const Advanced&);
 
 private:
 	string line;
 	int counter;
 	string opCode;
 	string comment;
+	string address;
 };
 
 #endif

@@ -3,8 +3,11 @@
 
 @init 	ADD;
 		SUB;
-		CPY;
-		ADD @init;
+		CPY; 
+		ADD;
 		SWAP;
-		JMPU @end;
-@end	POP;
+		JMPU @rando;
+@rando	POP;
+		JMPC @init;
+@end	JMPU @end;
+

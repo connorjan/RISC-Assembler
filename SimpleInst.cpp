@@ -1,8 +1,35 @@
 #include "SimpleInst.h"
+#include "File.h"
 
 Simple::Simple(string line, int counter, string opCode) : Assembler(line), line(line), counter(counter), opCode(opCode){}
 
 Simple::~Simple(){}
+
+void Simple::getComment()
+{
+	string line = this->line;
+
+	//Removes label
+	int posAt = line.find_first_of('@');
+	if (posAt != -1)
+	{
+		int posEnd = line.find_first_of(" \t", posAt);
+		line.erase(posAt, posEnd-posAt);
+	}
+
+	//Removes spaces, tabs, and semicolons
+	line.erase (remove ((line).begin(), (line).end(), ' '), (line).end());
+	(line).erase (remove ((line).begin(), (line).end(), '\t'), (line).end());
+	(line).erase (remove ((line).begin(), (line).end(), ';'), (line).end());
+
+	this->comment = line;
+}
+
+ostream& operator << (ostream& out, const Simple& s)
+{	
+	out << toHex(s.counter).at(2) << toHex(s.counter).at(3) << " : " << s.opCode << ";\t" << '%' << ' ' << s.comment << ' ' << '%';
+	return out;
+}
 
 AddInst::AddInst(string line, int counter) : Simple(line, counter, "0"), line(line), opCode("0"), counter(counter){}
 

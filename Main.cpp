@@ -1,4 +1,5 @@
 #include "SimpleInst.h"
+#include "AdvancedInst.h"
 #include "File.h"
 #include "Exception.h"
 
@@ -9,8 +10,6 @@ int main(int argc, char* argv[])
 	//cout << argc << endl; //Number of Params
 	//cout << argv[0] << endl; //Path to executable
 	//cout << argv[1] << endl; //Any subsequent params
-
-	cout << "test" << endl;
 
 	if (argc != 2)
 	{
@@ -34,6 +33,7 @@ int main(int argc, char* argv[])
 	lines = removeComments(lines);
 
 	int counter = 0;
+	string address;
 
 	ofstream myfile;
 	myfile.open ("mc.mif");
@@ -71,18 +71,20 @@ int main(int argc, char* argv[])
 
 
 	//Print map for verification
-	map<string, string>::iterator pos;
+	
+	/*map<string, string>::iterator pos;
     for(pos = labels.begin(); pos != labels.end(); ++pos)
     {
          cout << "Key: " << pos->first << endl;
          cout << "Value: " << pos->second << endl;
-    }
+    }*/
 
 	//Decodes and outputs to mif 
 	counter = 0;
 
 	for (it = lines.begin(); it != lines.end(); ++it)
 	{
+		address = "";
 		data = decodeLine(*it);
 		int opCode = stoi(data[0]);
 		
@@ -179,11 +181,63 @@ int main(int argc, char* argv[])
 				break;
 
 			case 8:
+
+				if (data[2].at(0) == '@')
+				{
+					address = labels[data[2]];
+				}
+				else if (data[2].at(0) == '0')
+				{
+					address = data[2];
+				}
+				else
+				{
+					cout << "Invalid Instruction on line: " << counter << endl;
+					delete myInst;
+					break;
+				}
+
+				boost::to_upper(address);
+
+				myInst = new JMPUInst(*it,counter, address);
+
+				((Advanced*)myInst)->getComment();
+
+				myfile << endl << *((Advanced*)myInst);
+
 				counter = counter + 2;
+
+				delete myInst;
 				break;
 
 			case 9:
+
+				if (data[2].at(0) == '@')
+				{
+					address = labels[data[2]];
+				}
+				else if (data[2].at(0) == '0')
+				{
+					address = data[2];
+				}
+				else
+				{
+					cout << "Invalid Instruction on line: " << counter << endl;
+					delete myInst;
+					break;
+				}
+
+				boost::to_upper(address);
+
+				myInst = new JMPCInst(*it,counter, address);
+
+				((Advanced*)myInst)->getComment();
+
+				myfile << endl << *((Advanced*)myInst);
+
 				counter = counter + 2;
+
+				delete myInst;
 				break;
 				
 			case 10:

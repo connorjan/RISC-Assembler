@@ -181,16 +181,6 @@ bool labelIsBefore(string line)
 	return (line[0]=='@');
 }
 
-string makeUpper(string line)
-{
-
-	for ( string::iterator it=line.begin(); it!=line.end(); ++it)
-    {
-    	*it = toupper(*it);
-    }
-
-	return line;
-}
 
 string toHex(int dec)
 {
@@ -198,12 +188,9 @@ string toHex(int dec)
   stringstream stream;
   stream << "0x" 
          << setfill ('0') << setw(2) 
-         << hex << dec;
+         << hex << uppercase << dec;
   return stream.str();
-
 }
-
-
 
 
 

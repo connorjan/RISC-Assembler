@@ -11,8 +11,6 @@ list<string> removeComments(list<string>);
 
 vector<string> decodeLine(string);
 
-string makeUpper(string);
-
 bool labelIsBefore(string);
 
 string toHex(int);
