@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
 		if (temp == "-d")
 		{
-
+			//Checks to see if there is an argument after the -d
 			if ((i+1) >= argc)
 			{
 				cout << "myAssembler: error: missing argument for -d" << endl;
@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
 
 			temp2 = argv[i+1];
 
+			//Checks to see if the argument for -d is purely numbers
 			if (!isDigits(temp2))
 			{
 				cout << "myAssembler: error: invalid argument for -d: '" << temp2 << "'" << endl;
@@ -71,15 +72,20 @@ int main(int argc, char* argv[])
 
 		else if (temp == "-o")
 		{
+			//Checks to see if there is a argument after the -o
 			if ( (i+1) >= argc)
 			{
 				cout << "myAssembler: error: missing argument for -o" << endl;
 				return -1;
 			}
 
-			temp2 = argv[i+1];
+			outFileName = argv[i+1];
 
-			outFileName = temp2;
+			//If filename does not contain .mif, this adds it in.
+			if (outFileName.compare(outFileName.size()-4,4,".mif") != 0)
+			{
+				outFileName.insert(outFileName.size(),".mif");
+			}
 		
 			i++;
 		}
