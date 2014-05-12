@@ -1,16 +1,14 @@
+-- test.txt
+-- Created with RISC Assembler by Connor Goldberg and Matthew Zachary
+
+WIDTH = 1;
+DEPTH = 256;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = HEX;
+
+CONTENT BEGIN
 
 00 : 0;	% ADD %
 01 : 1;	% SUB %
-02 : B;	% CPY %
-03 : 0;	% ADD %
-04 : A;	% SWAP %
-05 : 8;	% JMPU %
-06 : 0;
-07 : 8;
-08 : F;	% POP %
-09 : 9;	% JMPC %
-0A : 0;
-0B : 0;
-0C : 8;	% JMPU %
-0D : 0;
-0E : C;
+
+END;

@@ -45,6 +45,8 @@ int main(int argc, char* argv[])
 
 	list<string>::iterator it;
 
+	myfile << writeHeader(inFileName);
+
 	//Decodes for labels
 	for (it = lines.begin(); it != lines.end(); ++it)
 	{
@@ -71,8 +73,8 @@ int main(int argc, char* argv[])
 
 
 	//Print map for verification
-	
-	/*map<string, string>::iterator pos;
+
+/*	map<string, string>::iterator pos;
     for(pos = labels.begin(); pos != labels.end(); ++pos)
     {
          cout << "Key: " << pos->first << endl;
@@ -86,24 +88,35 @@ int main(int argc, char* argv[])
 	{
 		address = "";
 		data = decodeLine(*it);
+
 		int opCode = stoi(data[0]);
 		
 		switch (opCode)
 		{
 			case 0:
-				
+
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+
 				myInst = new AddInst(*it,counter);
 
 				((Simple*)myInst)->getComment();
 
 				myfile << endl << *((Simple*)myInst);
 
-				//CHECK TO MAKE SURE DATA[2] IS EMPTY!!!!
-
 				delete myInst;
 				break;
 
 			case 1:
+
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
 
 				myInst = new SubInst(*it,counter);
 
@@ -116,6 +129,12 @@ int main(int argc, char* argv[])
 
 			case 2:
 
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+				
 				myInst = new IncInst(*it,counter);
 
 				((Simple*)myInst)->getComment();
@@ -127,6 +146,12 @@ int main(int argc, char* argv[])
 
 			case 3:
 
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+				
 				myInst = new DecInst(*it,counter);
 
 				((Simple*)myInst)->getComment();
@@ -138,6 +163,12 @@ int main(int argc, char* argv[])
 				
 			case 4:
 
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+				
 				myInst = new NotInst(*it,counter);
 
 				((Simple*)myInst)->getComment();
@@ -149,6 +180,12 @@ int main(int argc, char* argv[])
 
 			case 5:
 
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+				
 				myInst = new AndInst(*it,counter);
 
 				((Simple*)myInst)->getComment();
@@ -160,6 +197,12 @@ int main(int argc, char* argv[])
 
 			case 6:
 
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+				
 				myInst = new OrInst(*it,counter);
 
 				((Simple*)myInst)->getComment();
@@ -171,6 +214,12 @@ int main(int argc, char* argv[])
 				
 			case 7:
 
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+				
 				myInst = new ShrInst(*it,counter);
 
 				((Simple*)myInst)->getComment();
@@ -181,6 +230,11 @@ int main(int argc, char* argv[])
 				break;
 
 			case 8:
+
+				if (labels[data[2]] == "")
+				{
+					cout << "error!" << endl;
+				}
 
 				if (data[2].at(0) == '@')
 				{
@@ -212,6 +266,11 @@ int main(int argc, char* argv[])
 
 			case 9:
 
+				if (labels[data[2]] == "")
+				{
+					cout << "error!" << endl;
+				}
+
 				if (data[2].at(0) == '@')
 				{
 					address = labels[data[2]];
@@ -242,6 +301,12 @@ int main(int argc, char* argv[])
 				
 			case 10:
 
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+				
 				myInst = new SwapInst(*it,counter);
 
 				((Simple*)myInst)->getComment();
@@ -252,8 +317,13 @@ int main(int argc, char* argv[])
 				break;
 
 			case 11:
-		
 
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+				
 				myInst = new CpyInst(*it, counter);
 			
 				((Simple*)myInst)->getComment();
@@ -264,23 +334,157 @@ int main(int argc, char* argv[])
 				break;
 
 			case 12:
+
+				if (labels[data[2]] == "")
+				{
+					cout << "error!" << endl;
+				}
+
+				if (data[2].at(0) == '@')
+				{
+					cout << "Error!" << endl;
+					break;
+				}
+				else if (data[2].at(0) == '0')
+				{
+					address = data[2];
+				}
+				else
+				{
+					cout << "Invalid Instruction on line: " << counter << endl;
+					delete myInst;
+					break;
+				}
+
+				boost::to_upper(address);
+
+				myInst = new WrInst(*it,counter, address);
+
+				((Advanced*)myInst)->getComment();
+
+				myfile << endl << *((Advanced*)myInst);
+
 				counter = counter + 2;
+
+				delete myInst;
 				break;
 				
 			case 13:
+
+				if (labels[data[2]] == "")
+				{
+					cout << "error!" << endl;
+				}
+
+				if (data[2].at(0) == '@')
+				{
+					cout << "Error!" << endl;
+					break;
+				}
+				else if (data[2].at(0) == '0')
+				{
+					address = data[2];
+				}
+				else
+				{
+					cout << "Invalid Instruction on line: " << counter << endl;
+					delete myInst;
+					break;
+				}
+
+				boost::to_upper(address);
+
+				myInst = new RdInst(*it,counter, address);
+
+				((Advanced*)myInst)->getComment();
+
+				myfile << endl << *((Advanced*)myInst);
+
 				counter = counter + 2;
+
+				delete myInst;
 				break;
 
 			case 14:
-				counter++;
+
+				if (labels[data[2]] == "")
+				{
+					cout << "error!" << endl;
+				}
+
+				if (data[2].at(0) == '@')
+				{
+					cout << "Error!" << endl;
+					break;
+				}
+				else if (data[2].at(0) == '0')
+				{
+					address = data[2];
+				}
+				else
+				{
+					cout << "Invalid Instruction on line: " << counter << endl;
+					delete myInst;
+					break;
+				}
+
+				boost::to_upper(address);
+
+				myInst = new InInst(*it,counter, address);
+
+				((Advanced*)myInst)->getComment();
+
+				myfile << endl << *((Advanced*)myInst);
+
+				counter = counter + 1;
+
+				delete myInst;
 				break;
 
 			case 15:
-				counter++;
+
+				if (labels[data[2]] == "")
+				{
+					cout << "error!" << endl;
+				}
+
+				if (data[2].at(0) == '@')
+				{
+					cout << "Error!" << endl;
+					break;
+				}
+				else if (data[2].at(0) == '0')
+				{
+					address = data[2];
+				}
+				else
+				{
+					cout << "Invalid Instruction on line: " << counter << endl;
+					delete myInst;
+					break;
+				}
+
+				boost::to_upper(address);
+
+				myInst = new OutInst(*it,counter, address);
+
+				((Advanced*)myInst)->getComment();
+
+				myfile << endl << *((Advanced*)myInst);
+
+				counter = counter + 1;
+
+				delete myInst;
 				break;
 				
 			case 16:
 
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+				
 				myInst = new PushInst(*it,counter);
 
 				((Simple*)myInst)->getComment();
@@ -292,6 +496,12 @@ int main(int argc, char* argv[])
 
 			case 17:
 
+				if (data[2] != "")
+				{
+					cout << "error!" << endl;
+					break;
+				}
+				
 				myInst = new PopInst(*it,counter);
 
 				((Simple*)myInst)->getComment();
@@ -308,6 +518,7 @@ int main(int argc, char* argv[])
 		counter ++;
 	}
 
+	myfile << "\n\nEND;" ;
 	myfile.close();
 
 	return 0;

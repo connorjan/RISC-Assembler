@@ -1,13 +1,3 @@
-;Comment1
-;Line 2
-
-@init 	ADD;
-		SUB;
-		CPY; 
-		ADD;
-		SWAP;
-		JMPU @rando;
-@rando	POP;
-		JMPC @init;
-@end	JMPU @end;
-
+@init ADD;
+	SUB;
+	WR @init;

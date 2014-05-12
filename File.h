@@ -15,4 +15,6 @@ bool labelIsBefore(string);
 
 string toHex(int);
 
+string writeHeader(string);
+
 #endif
