@@ -17,4 +17,6 @@ string toHex(int);
 
 string writeHeader(string, string, string);
 
+bool isDigits(string);
+
 #endif

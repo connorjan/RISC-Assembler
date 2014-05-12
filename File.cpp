@@ -196,7 +196,7 @@ string writeHeader(string fileName, string width, string depth)
 {
 	stringstream stream;
 
-	stream 	<< "-- " << fileName << endl
+	stream 	<< "-- Assembled from " << fileName << endl
 			<< "-- Created with RISC Assembler by Connor Goldberg and Matthew Zachary" << endl
 			<< endl
 			<< "WIDTH = " << width << ";" << endl
@@ -209,3 +209,7 @@ string writeHeader(string fileName, string width, string depth)
 	return stream.str();
 }
 
+bool isDigits(string str)
+{
+    return ((str.find_first_not_of("0123456789") == -1));
+}

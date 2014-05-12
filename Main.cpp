@@ -11,61 +11,105 @@ int main(int argc, char* argv[])
 	//cout << argv[0] << endl; //Path to executable
 	//cout << argv[1] << endl; //Any subsequent params
 
+	string usage = "usage: ./myAssembler [--help] <filename-path> [-d <depth>] [-h] [-v] [-o <name>]";
+
 	if (argc < 2)
 	{
-		cout << "usage: ./myAssembler [--help] <filename-path> [-d <depth>]" << endl;
+		cout << usage << endl;
 		return -1;
 	}
 
 	string inFileName = argv[1];
+	string outFileName = "mc.mif";
 
 	string temp;
 	string temp2;
 	string width = "1";
 	string depth = "256";
-	string mode;
+	string mode = "";
 
 	//Make it so user can do ./myAssembler --help without error about no input file!
 
-	for (int i = 2; i < argc-1; i++)
+	if (inFileName == "--help")
 	{
-		temp = argv[i];
-		temp2 = argv[i+1];
-
-		if (temp == "--help")
-		{
-			cout 	<< "usage: ./myAssembler [--help] <filename-path> [-d <depth>]" << endl 
+		cout 		<< usage << endl 
 					<< endl
 					<< "Options:" << endl
 					<< "--help\t\tDisplay available options" << endl
-					<< "-d <value>\t\tSet the depth of the .mif file" << endl
+					<< "-d <value>\tSet the depth of the .mif file" << endl
 					<< "-h\t\tSet the architecture mode to Harvard" << endl
-					<< "-o\t\tSpecify the output file name" << endl
+					<< "-o <name>\tSpecify the output file name" << endl
 					<< "-v\t\tSet the architecture mode to Von Neumann" << endl;
+		return -1;
+	}
+
+	for (int i = 2; i < argc; i++)
+	{
+		temp = argv[i];
+
+		if (temp == "-d")
+		{
+
+			if ((i+1) >= argc)
+			{
+				cout << "myAssembler: error: missing argument for -d" << endl;
+				return -1;
+			}
+
+			temp2 = argv[i+1];
+
+			if (!isDigits(temp2))
+			{
+				cout << "myAssembler: error: invalid argument for -d: '" << temp2 << "'" << endl;
+				return -1;
+			}
+
+			depth = temp2;
+		
+			i++;
 		}
 
-		else if ((temp == "-d"))
+		else if (temp == "-o")
 		{
-			depth = temp2;
+			if ( (i+1) >= argc)
+			{
+				cout << "myAssembler: error: missing argument for -o" << endl;
+				return -1;
+			}
 
-			//Make sure temp2 is a number!
+			temp2 = argv[i+1];
+
+			outFileName = temp2;
+		
 			i++;
 		}
 
 		else if (temp == "-h")
 		{
+			if (mode != "")
+			{
+				cout << "myAssembler: error: cannot use both [-h] and [-v]" << endl;
+				return -1;
+			}
 			mode = "h";
+			//cout << "Set mode: " << mode << endl;
 		}
 
 		else if (temp == "-v")
 		{
+			if (mode != "")
+			{
+				cout << "myAssembler: error: cannot use both [-h] and [-v]" << endl;
+				return -1;
+			}
 			mode = "v";
+			//cout << "Set mode: " << mode << endl;
 		}
 
 		else
 		{
-			cout << "Unknown option: " << argv[i] << endl;
-			cout << "usage: ./myAssembler [--help] <filename-path> [-d <depth>]" << endl;
+			cout << "myAssembler: error: unknown option: " << argv[i] << endl;
+			cout << usage << endl;
 			return -1;
 		}
 	}
@@ -73,6 +117,7 @@ int main(int argc, char* argv[])
 
 
 	list<string> lines;
+
 	try
 	{
 		lines = openFile(inFileName);
@@ -90,7 +135,7 @@ int main(int argc, char* argv[])
 	string address;
 
 	ofstream myfile;
-	myfile.open ("mc.mif");
+	myfile.open (outFileName);
 
 	Assembler *myInst;
 	vector<string> data(3);
@@ -127,13 +172,6 @@ int main(int argc, char* argv[])
 
 
 	//Print map for verification
-
-/*	map<string, string>::iterator pos;
-    for(pos = labels.begin(); pos != labels.end(); ++pos)
-    {
-         cout << "Key: " << pos->first << endl;
-         cout << "Value: " << pos->second << endl;
-    }*/
 
 	//Decodes and outputs to mif 
 	counter = 0;
