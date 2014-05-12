@@ -10,6 +10,8 @@ int main(int argc, char* argv[])
 	//cout << argv[0] << endl; //Path to executable
 	//cout << argv[1] << endl; //Any subsequent params
 
+	cout << "test" << endl;
+
 	if (argc != 2)
 	{
 		cout << "usage: ./myAssembler <filename-path>" << endl;
