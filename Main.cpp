@@ -76,9 +76,6 @@ int main(int argc, char* argv[])
          cout << "Value: " << pos->second << endl;
     }
 
-
-
-
 	//Decodes and outputs to mif 
 	counter = 0;
 
