@@ -117,8 +117,17 @@ vector<string> decodeLine(string line)
 
 	if (((posX-posZero == 1) or (posx-posZero==1)) and ((line[posZero-1] == ' ') or (line[posZero-1] == '\t')))
 	{
-		data[2] = line.substr(posZero, 4);
-		line.erase(posZero, 4);
+		int posEnd = line.find_first_of(" \t;", posZero);
+
+		if (posEnd-posZero != 4)
+		{
+			throw AddressError();
+		}
+
+
+		data[2] = line.substr(posZero, posEnd-posZero);
+
+		line.erase(posZero, posEnd-posZero);
 	}
 
 		line.erase (remove ((line).begin(), (line).end(), ' '), (line).end());

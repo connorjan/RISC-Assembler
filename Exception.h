@@ -12,5 +12,22 @@ public:
 ReadError();
 };
 
+class AddressError : public std::runtime_error
+{
+public:
+AddressError();
+};
+
+class ParamError : public std::runtime_error
+{
+public:
+ParamError();
+};
+
+class InstError : public std::runtime_error
+{
+public:
+InstError();
+};
 
 #endif

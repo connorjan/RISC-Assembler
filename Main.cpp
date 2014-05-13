@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	string temp2;
 	string width = "1";
 	string depth = "256";
-	string mode = "";
+	string mode = "h";
 
 	//Make it so user can do ./myAssembler --help without error about no input file!
 
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 		else if (temp == "-o")
 		{
 			//Checks to see if there is a argument after the -o
-			if ( (i+1) >= argc)
+			if ((i+1) >= argc)
 			{
 				cout << "myAssembler: error: missing argument for -o" << endl;
 				return -1;
@@ -92,20 +92,20 @@ int main(int argc, char* argv[])
 
 		else if (temp == "-h")
 		{
-			if (mode != "")
+			if (mode != "h")
 			{
-				cout << "myAssembler: error: cannot use both [-h] and [-v]" << endl;
+				cout << "myAssembler: error: cannot more than one instance of [-h] or [-v]" << endl;
 				return -1;
 			}
-			mode = "h";
+			mode = "h2";
 			//cout << "Set mode: " << mode << endl;
 		}
 
 		else if (temp == "-v")
 		{
-			if (mode != "")
+			if (mode != "h")
 			{
-				cout << "myAssembler: error: cannot use both [-h] and [-v]" << endl;
+				cout << "myAssembler: error: cannot more than one instance of [-h] or [-v]" << endl;
 				return -1;
 			}
 			mode = "v";
@@ -152,7 +152,10 @@ int main(int argc, char* argv[])
 
 	myfile << writeHeader(inFileName, width, depth);
 
+	int totalLines;
+
 	//Decodes for labels
+	try{
 	for (it = lines.begin(); it != lines.end(); ++it)
 	{
 		data = decodeLine(*it);
@@ -176,6 +179,7 @@ int main(int argc, char* argv[])
 		counter++;
 	}
 
+	totalLines = counter;
 
 	//Print map for verification
 
@@ -188,14 +192,14 @@ int main(int argc, char* argv[])
 		data = decodeLine(*it);
 
 		int opCode = stoi(data[0]);
-		
+		try{
 		switch (opCode)
 		{
 			case 0:
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 
@@ -212,7 +216,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 
@@ -229,7 +233,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 				
@@ -246,7 +250,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 				
@@ -263,7 +267,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 				
@@ -280,7 +284,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 				
@@ -297,7 +301,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 				
@@ -314,7 +318,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 				
@@ -331,7 +335,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] == "")
 				{
-					cout << "No argument" << endl;
+					throw ParamError();
 				}
 
 				if (data[2].at(0) == '@')
@@ -355,6 +359,8 @@ int main(int argc, char* argv[])
 
 				boost::to_upper(address);
 
+				//IF address-to-decimal is larger than totalLines, error.
+
 				myInst = new JMPUInst(*it,counter, address);
 
 				((Advanced*)myInst)->getComment();
@@ -370,7 +376,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] == "")
 				{
-					cout << "no argument" << endl;
+					throw ParamError();
 				}
 
 				if (data[2].at(0) == '@')
@@ -409,7 +415,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 				
@@ -426,7 +432,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 				
@@ -443,12 +449,12 @@ int main(int argc, char* argv[])
 
 				if (data[2] == "")
 				{
-					cout << "No argument" << endl;
+					throw ParamError();
 				}
 
 				if (data[2].at(0) == '@')
 				{
-					cout << "Can't wr to label" << endl;
+					throw ParamError();
 					break;
 				}
 				else if (data[2].at(0) == '0')
@@ -479,12 +485,12 @@ int main(int argc, char* argv[])
 
 				if (data[2] == "")
 				{
-					cout << "No argument" << endl;
+					throw ParamError();
 				}
 
 				if (data[2].at(0) == '@')
 				{
-					cout << "Cant rd from label!" << endl;
+					throw ParamError();
 					break;
 				}
 				else if (data[2].at(0) == '0')
@@ -515,12 +521,12 @@ int main(int argc, char* argv[])
 
 				if (data[2] == "")
 				{
-					cout << "No argument" << endl;
+					throw ParamError();
 				}
 
 				if (data[2].at(0) == '@')
 				{
-					cout << "cant in from label!" << endl;
+					throw ParamError();
 					break;
 				}
 				else if (data[2].at(0) == '0')
@@ -551,12 +557,12 @@ int main(int argc, char* argv[])
 
 				if (data[2] == "")
 				{
-					cout << "No argument" << endl;
+					throw ParamError();
 				}
 
 				if (data[2].at(0) == '@')
 				{
-					cout << "cant out from label!" << endl;
+					throw ParamError();
 					break;
 				}
 				else if (data[2].at(0) == '0')
@@ -587,7 +593,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 				
@@ -604,7 +610,7 @@ int main(int argc, char* argv[])
 
 				if (data[2] != "")
 				{
-					cout << "error!" << endl;
+					throw ParamError();
 					break;
 				}
 				
@@ -618,10 +624,28 @@ int main(int argc, char* argv[])
 				break;
 
 			default:
-				cout << "Invalid Instruction on line: " << *it << endl;
+				throw InstError();
+				return -1;
+		}
+		}
+		catch(ParamError)
+		{	
+			cout << "Invalid parameter on line: " << *it << endl;
+			return -1;
+		}
+		catch(InstError)
+		{	
+			cout << "Invalid instruction on line: " << *it << endl;
+			return -1;
 		}
 
 		counter ++;
+	}
+	}
+	catch (exception &AddressError)
+	{
+		cout << "Invalid address on line: " << *it << endl;
+		return -1;
 	}
 
 	myfile << "\n\nEND;" ;
