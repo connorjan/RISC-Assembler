@@ -2,6 +2,7 @@
 #define __SIMPLEINST_H
 
 #include "Assembler.h"
+
 using namespace std;
 
 class AddInst : public Simple
@@ -171,7 +172,5 @@ private:
 	string opCode;
 
 };
-
-
 
 #endif

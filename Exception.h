@@ -8,26 +8,56 @@
 
 class ReadError : public std::runtime_error
 {
+
 public:
-ReadError();
+	ReadError();
+
 };
 
 class AddressError : public std::runtime_error
 {
+
 public:
-AddressError();
+	AddressError();
+
 };
 
 class ParamError : public std::runtime_error
 {
 public:
-ParamError();
+	ParamError();
 };
 
 class InstError : public std::runtime_error
 {
+
 public:
-InstError();
+	InstError();
+
+};
+
+class UndefLabel : public std::runtime_error
+{
+
+public:
+	UndefLabel();
+
+};
+
+class VonError : public std::runtime_error
+{
+
+public:
+	VonError();
+
+};
+
+class JmpError : public std::runtime_error
+{
+	
+public:
+	JmpError();
+
 };
 
 #endif

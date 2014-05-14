@@ -10,6 +10,7 @@
 #include <iostream>
 #include <ctype.h>
 #include <iomanip>
+#include <cstdio>
 #include <boost/algorithm/string/case_conv.hpp>
 
 using namespace std;
@@ -41,6 +42,7 @@ private:
 	int counter;
 	string opCode;
 	string comment;
+
 };
 
 class Advanced : public Assembler
@@ -58,6 +60,7 @@ private:
 	string opCode;
 	string comment;
 	string address;
+	
 };
 
 #endif

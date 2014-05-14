@@ -7,9 +7,6 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	//cout << argc << endl; //Number of Params
-	//cout << argv[0] << endl; //Path to executable
-	//cout << argv[1] << endl; //Any subsequent params
 
 	string usage = "usage: ./myAssembler [--help] <filename-path> [-d <depth>] [-h] [-v] [-o <name>]";
 
@@ -26,9 +23,7 @@ int main(int argc, char* argv[])
 	string temp2;
 	string width = "1";
 	string depth = "256";
-	string mode = "h";
-
-	//Make it so user can do ./myAssembler --help without error about no input file!
+	string mode = "";
 
 	if (inFileName == "--help")
 	{
@@ -92,18 +87,19 @@ int main(int argc, char* argv[])
 
 		else if (temp == "-h")
 		{
-			if (mode != "h")
+			if (mode != "")
 			{
 				cout << "myAssembler: error: cannot more than one instance of [-h] or [-v]" << endl;
 				return -1;
 			}
-			mode = "h2";
+
+			mode = "h";
 			//cout << "Set mode: " << mode << endl;
 		}
 
 		else if (temp == "-v")
 		{
-			if (mode != "h")
+			if (mode != "")
 			{
 				cout << "myAssembler: error: cannot more than one instance of [-h] or [-v]" << endl;
 				return -1;
@@ -119,8 +115,6 @@ int main(int argc, char* argv[])
 			return -1;
 		}
 	}
-
-
 
 	list<string> lines;
 
@@ -153,503 +147,519 @@ int main(int argc, char* argv[])
 	myfile << writeHeader(inFileName, width, depth);
 
 	int totalLines;
+	
+	string noLead;
 
 	//Decodes for labels
-	try{
-	for (it = lines.begin(); it != lines.end(); ++it)
+	try
 	{
-		data = decodeLine(*it);
-		int opCode = stoi(data[0]);
+		for (it = lines.begin(); it != lines.end(); ++it)
+		{
+			data = decodeLine(*it);
+			int opCode = stoi(data[0]);
 
-		if (data[1] != "")
-		{
-			labels[data[1]] = toHex(counter);
-		}
+			if (data[1] != "")
+			{
+				labels[data[1]] = toHex(counter);
+			}
 
-		//Handles the counter
-		if ((opCode == 8) or (opCode == 9) or (opCode == 12) or (opCode == 13))
-		{
-			counter = counter+2;
-		}
-		else if ((opCode == 14) or (opCode == 15))
-		{
+			//Handles the counter
+			if ((opCode == 8) or (opCode == 9) or (opCode == 12) or (opCode == 13))
+			{
+				counter = counter+2;
+			}
+			else if ((opCode == 14) or (opCode == 15))
+			{
+				counter++;
+			}
+
 			counter++;
 		}
 
-		counter++;
-	}
+		totalLines = counter;
 
-	totalLines = counter;
+		//Print map for verification
 
-	//Print map for verification
+		//Decodes and outputs to mif 
+		counter = 0;
 
-	//Decodes and outputs to mif 
-	counter = 0;
-
-	for (it = lines.begin(); it != lines.end(); ++it)
-	{
-		address = "";
-		data = decodeLine(*it);
-
-		int opCode = stoi(data[0]);
-		try{
-		switch (opCode)
+		for (it = lines.begin(); it != lines.end(); ++it)
 		{
-			case 0:
+			address = "";
+			data = decodeLine(*it);
+			noLead = removeLead(*it);
 
-				if (data[2] != "")
-				{
-					throw ParamError();
-					break;
-				}
+			int opCode = stoi(data[0]);
+			switch (opCode)
+			{
+				case 0:
 
-				myInst = new AddInst(*it,counter);
-
-				((Simple*)myInst)->getComment();
-
-				myfile << endl << *((Simple*)myInst);
-
-				delete myInst;
-				break;
-
-			case 1:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
-					break;
-				}
-
-				myInst = new SubInst(*it,counter);
-
-				((Simple*)myInst)->getComment();
-
-				myfile << endl << *((Simple*)myInst);
-
-				delete myInst;
-				break;
-
-			case 2:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
-					break;
-				}
-				
-				myInst = new IncInst(*it,counter);
-
-				((Simple*)myInst)->getComment();
-
-				myfile << endl << *((Simple*)myInst);
-
-				delete myInst;
-				break;
-
-			case 3:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
-					break;
-				}
-				
-				myInst = new DecInst(*it,counter);
-
-				((Simple*)myInst)->getComment();
-
-				myfile << endl << *((Simple*)myInst);
-
-				delete myInst;
-				break;
-				
-			case 4:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
-					break;
-				}
-				
-				myInst = new NotInst(*it,counter);
-
-				((Simple*)myInst)->getComment();
-
-				myfile << endl << *((Simple*)myInst);
-
-				delete myInst;
-				break;
-
-			case 5:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
-					break;
-				}
-				
-				myInst = new AndInst(*it,counter);
-
-				((Simple*)myInst)->getComment();
-
-				myfile << endl << *((Simple*)myInst);
-
-				delete myInst;
-				break;
-
-			case 6:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
-					break;
-				}
-				
-				myInst = new OrInst(*it,counter);
-
-				((Simple*)myInst)->getComment();
-
-				myfile << endl << *((Simple*)myInst);
-
-				delete myInst;
-				break;
-				
-			case 7:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
-					break;
-				}
-				
-				myInst = new ShrInst(*it,counter);
-
-				((Simple*)myInst)->getComment();
-
-				myfile << endl << *((Simple*)myInst);
-
-				delete myInst;
-				break;
-
-			case 8:
-
-				if (data[2] == "")
-				{
-					throw ParamError();
-				}
-
-				if (data[2].at(0) == '@')
-				{
-					if (labels[data[2]] == "")
+					if (data[2] != "")
 					{
-						cout << "label not defined: " << data[2] << endl;
+						throw ParamError();
 					}
-					address = labels[data[2]];
-				}
-				else if (data[2].at(0) == '0')
-				{
-					address = data[2];
-				}
-				else
-				{
-					cout << "Invalid Instruction on line: " << counter << endl;
+
+					myInst = new AddInst(*it,counter);
+
+					((Simple*)myInst)->getComment();
+
+					myfile << endl << *((Simple*)myInst);
+
 					delete myInst;
 					break;
-				}
 
-				boost::to_upper(address);
+				case 1:
 
-				//IF address-to-decimal is larger than totalLines, error.
-
-				myInst = new JMPUInst(*it,counter, address);
-
-				((Advanced*)myInst)->getComment();
-
-				myfile << endl << *((Advanced*)myInst);
-
-				counter = counter + 2;
-
-				delete myInst;
-				break;
-
-			case 9:
-
-				if (data[2] == "")
-				{
-					throw ParamError();
-				}
-
-				if (data[2].at(0) == '@')
-				{
-					if (labels[data[2]] == "")
+					if (data[2] != "")
 					{
-						cout << "label not defined: " << data[2] << endl;
+						throw ParamError();
 					}
-					address = labels[data[2]];
-				}
-				else if (data[2].at(0) == '0')
-				{
-					address = data[2];
-				}
-				else
-				{
-					cout << "Invalid Instruction on line: " << counter << endl;
+
+					myInst = new SubInst(*it,counter);
+
+					((Simple*)myInst)->getComment();
+
+					myfile << endl << *((Simple*)myInst);
+
 					delete myInst;
 					break;
-				}
 
-				boost::to_upper(address);
+				case 2:
 
-				myInst = new JMPCInst(*it,counter, address);
+					if (data[2] != "")
+					{
+						throw ParamError();
+					}
+					
+					myInst = new IncInst(*it,counter);
 
-				((Advanced*)myInst)->getComment();
+					((Simple*)myInst)->getComment();
 
-				myfile << endl << *((Advanced*)myInst);
+					myfile << endl << *((Simple*)myInst);
 
-				counter = counter + 2;
-
-				delete myInst;
-				break;
-				
-			case 10:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
-					break;
-				}
-				
-				myInst = new SwapInst(*it,counter);
-
-				((Simple*)myInst)->getComment();
-
-				myfile << endl << *((Simple*)myInst);
-
-				delete myInst;
-				break;
-
-			case 11:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
-					break;
-				}
-				
-				myInst = new CpyInst(*it, counter);
-			
-				((Simple*)myInst)->getComment();
-
-				myfile << endl << *((Simple*)myInst);
-
-				delete myInst;
-				break;
-
-			case 12:
-
-				if (data[2] == "")
-				{
-					throw ParamError();
-				}
-
-				if (data[2].at(0) == '@')
-				{
-					throw ParamError();
-					break;
-				}
-				else if (data[2].at(0) == '0')
-				{
-					address = data[2];
-				}
-				else
-				{
-					cout << "Invalid Instruction on line: " << counter << endl;
 					delete myInst;
 					break;
-				}
 
-				boost::to_upper(address);
+				case 3:
 
-				myInst = new WrInst(*it,counter, address);
+					if (data[2] != "")
+					{
+						throw ParamError();
+					}
+					
+					myInst = new DecInst(*it,counter);
 
-				((Advanced*)myInst)->getComment();
+					((Simple*)myInst)->getComment();
 
-				myfile << endl << *((Advanced*)myInst);
+					myfile << endl << *((Simple*)myInst);
 
-				counter = counter + 2;
-
-				delete myInst;
-				break;
-				
-			case 13:
-
-				if (data[2] == "")
-				{
-					throw ParamError();
-				}
-
-				if (data[2].at(0) == '@')
-				{
-					throw ParamError();
-					break;
-				}
-				else if (data[2].at(0) == '0')
-				{
-					address = data[2];
-				}
-				else
-				{
-					cout << "Invalid Instruction on line: " << counter << endl;
 					delete myInst;
 					break;
-				}
+					
+				case 4:
 
-				boost::to_upper(address);
+					if (data[2] != "")
+					{
+						throw ParamError();
+					}
+					
+					myInst = new NotInst(*it,counter);
 
-				myInst = new RdInst(*it,counter, address);
+					((Simple*)myInst)->getComment();
 
-				((Advanced*)myInst)->getComment();
+					myfile << endl << *((Simple*)myInst);
 
-				myfile << endl << *((Advanced*)myInst);
-
-				counter = counter + 2;
-
-				delete myInst;
-				break;
-
-			case 14:
-
-				if (data[2] == "")
-				{
-					throw ParamError();
-				}
-
-				if (data[2].at(0) == '@')
-				{
-					throw ParamError();
-					break;
-				}
-				else if (data[2].at(0) == '0')
-				{
-					address = data[2];
-				}
-				else
-				{
-					cout << "Invalid Instruction on line: " << counter << endl;
 					delete myInst;
 					break;
-				}
 
-				boost::to_upper(address);
+				case 5:
 
-				myInst = new InInst(*it,counter, address);
+					if (data[2] != "")
+					{
+						throw ParamError();
+						break;
+					}
+					
+					myInst = new AndInst(*it,counter);
 
-				((Advanced*)myInst)->getComment();
+					((Simple*)myInst)->getComment();
 
-				myfile << endl << *((Advanced*)myInst);
+					myfile << endl << *((Simple*)myInst);
 
-				counter = counter + 1;
-
-				delete myInst;
-				break;
-
-			case 15:
-
-				if (data[2] == "")
-				{
-					throw ParamError();
-				}
-
-				if (data[2].at(0) == '@')
-				{
-					throw ParamError();
-					break;
-				}
-				else if (data[2].at(0) == '0')
-				{
-					address = data[2];
-				}
-				else
-				{
-					cout << "Invalid Instruction on line: " << counter << endl;
 					delete myInst;
 					break;
-				}
 
-				boost::to_upper(address);
+				case 6:
 
-				myInst = new OutInst(*it,counter, address);
+					if (data[2] != "")
+					{
+						throw ParamError();
+					}
+					
+					myInst = new OrInst(*it,counter);
 
-				((Advanced*)myInst)->getComment();
+					((Simple*)myInst)->getComment();
 
-				myfile << endl << *((Advanced*)myInst);
+					myfile << endl << *((Simple*)myInst);
 
-				counter = counter + 1;
-
-				delete myInst;
-				break;
-				
-			case 16:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
+					delete myInst;
 					break;
-				}
-				
-				myInst = new PushInst(*it,counter);
+					
+				case 7:
 
-				((Simple*)myInst)->getComment();
+					if (data[2] != "")
+					{
+						throw ParamError();
+					}
+					
+					myInst = new ShrInst(*it,counter);
 
-				myfile << endl << *((Simple*)myInst);
+					((Simple*)myInst)->getComment();
 
-				delete myInst;
-				break;
+					myfile << endl << *((Simple*)myInst);
 
-			case 17:
-
-				if (data[2] != "")
-				{
-					throw ParamError();
+					delete myInst;
 					break;
-				}
+
+				case 8:
+
+					if (data[2] == "")
+					{
+						throw ParamError();
+					}
+
+					if (data[2].at(0) == '@')
+					{
+						if (labels[data[2]] == "")
+						{
+							throw UndefLabel();
+						}
+						address = labels[data[2]];
+					}
+					else if (data[2].at(0) == '0')
+					{
+						address = data[2];
+					}
+					else
+					{
+						throw InstError();
+					}
+
+					boost::to_upper(address);
+
+					if (toDec(address) > totalLines)
+					{
+						throw JmpError();
+					}
+
+					myInst = new JMPUInst(*it,counter, address);
+
+					((Advanced*)myInst)->getComment();
+
+					myfile << endl << *((Advanced*)myInst);
+
+					counter = counter + 2;
+
+					delete myInst;
+					break;
+
+				case 9:
+
+					if (data[2] == "")
+					{
+						throw ParamError();
+					}
+
+					if (data[2].at(0) == '@')
+					{
+						if (labels[data[2]] == "")
+						{
+							throw UndefLabel();
+						}
+						address = labels[data[2]];
+					}
+					else if (data[2].at(0) == '0')
+					{
+						address = data[2];
+					}
+					else
+					{
+						throw InstError();
+					}
+
+					boost::to_upper(address);
+
+					if (toDec(address) > totalLines)
+					{
+						throw JmpError();
+					}
+
+					myInst = new JMPCInst(*it,counter, address);
+
+					((Advanced*)myInst)->getComment();
+
+					myfile << endl << *((Advanced*)myInst);
+
+					counter = counter + 2;
+
+					delete myInst;
+					break;
+					
+				case 10:
+
+					if (data[2] != "")
+					{
+						throw ParamError();
+					}
+					
+					myInst = new SwapInst(*it,counter);
+
+					((Simple*)myInst)->getComment();
+
+					myfile << endl << *((Simple*)myInst);
+
+					delete myInst;
+					break;
+
+				case 11:
+
+					if (data[2] != "")
+					{
+						throw ParamError();
+					}
+					
+					myInst = new CpyInst(*it, counter);
 				
-				myInst = new PopInst(*it,counter);
+					((Simple*)myInst)->getComment();
 
-				((Simple*)myInst)->getComment();
+					myfile << endl << *((Simple*)myInst);
 
-				myfile << endl << *((Simple*)myInst);
+					delete myInst;
+					break;
 
-				delete myInst;
-				break;
+				case 12:
 
-			default:
-				throw InstError();
-				return -1;
+					if (data[2] == "")
+					{
+						throw ParamError();
+					}
+
+					if (data[2].at(0) == '@')
+					{
+						throw ParamError();
+					}
+					else if (data[2].at(0) == '0')
+					{
+						address = data[2];
+					}
+					else
+					{
+						throw InstError();
+					}
+
+					boost::to_upper(address);
+
+					if ((mode != "h") and ((toDec(address) < totalLines)))
+					{
+						throw VonError();
+					}
+
+					myInst = new WrInst(*it,counter, address);
+
+					((Advanced*)myInst)->getComment();
+
+					myfile << endl << *((Advanced*)myInst);
+
+					counter = counter + 2;
+
+					delete myInst;
+					break;
+					
+				case 13:
+
+					if (data[2] == "")
+					{
+						throw ParamError();
+					}
+
+					if (data[2].at(0) == '@')
+					{
+						throw ParamError();
+					}
+					else if (data[2].at(0) == '0')
+					{
+						address = data[2];
+					}
+					else
+					{
+						throw InstError();
+					}
+
+					boost::to_upper(address);
+
+					if ((mode != "h") and ((toDec(address) < totalLines)))
+					{
+						throw VonError();
+					}
+
+					myInst = new RdInst(*it,counter, address);
+
+					((Advanced*)myInst)->getComment();
+
+					myfile << endl << *((Advanced*)myInst);
+
+					counter = counter + 2;
+
+					delete myInst;
+					break;
+
+				case 14:
+
+					if (data[2] == "")
+					{
+						throw ParamError();
+					}
+
+					if (data[2].at(0) == '@')
+					{
+						throw ParamError();
+					}
+					else if (data[2].at(0) == '0')
+					{
+						address = data[2];
+					}
+					else
+					{
+						throw InstError();
+					}
+
+					boost::to_upper(address);
+
+					myInst = new InInst(*it,counter, address);
+
+					((Advanced*)myInst)->getComment();
+
+					myfile << endl << *((Advanced*)myInst);
+
+					counter = counter + 1;
+
+					delete myInst;
+					break;
+
+				case 15:
+
+					if (data[2] == "")
+					{
+						throw ParamError();
+					}
+
+					if (data[2].at(0) == '@')
+					{
+						throw ParamError();
+					}
+					else if (data[2].at(0) == '0')
+					{
+						address = data[2];
+					}
+					else
+					{
+						throw InstError();
+					}
+
+					boost::to_upper(address);
+
+					myInst = new OutInst(*it,counter, address);
+
+					((Advanced*)myInst)->getComment();
+
+					myfile << endl << *((Advanced*)myInst);
+
+					counter = counter + 1;
+
+					delete myInst;
+					break;
+					
+				case 16:
+
+					if (data[2] != "")
+					{
+						throw ParamError();
+					}
+					
+					myInst = new PushInst(*it,counter);
+
+					((Simple*)myInst)->getComment();
+
+					myfile << endl << *((Simple*)myInst);
+
+					delete myInst;
+					break;
+
+				case 17:
+
+					if (data[2] != "")
+					{
+						throw ParamError();
+					}
+					
+					myInst = new PopInst(*it,counter);
+
+					((Simple*)myInst)->getComment();
+
+					myfile << endl << *((Simple*)myInst);
+
+					delete myInst;
+					break;
+
+				default:
+					throw InstError();
+			}
+
+			counter ++;
 		}
-		}
-		catch(ParamError)
-		{	
-			cout << "Invalid parameter on line: " << *it << endl;
-			return -1;
-		}
-		catch(InstError)
-		{	
-			cout << "Invalid instruction on line: " << *it << endl;
-			return -1;
-		}
-
-		counter ++;
 	}
-	}
-	catch (exception &AddressError)
+	catch (AddressError)
 	{
-		cout << "Invalid address on line: " << *it << endl;
-		return -1;
+		cout << "Invalid address on line: " << noLead << endl;
+		goto fail;
+	}
+	catch(ParamError)
+	{	
+		cout << "Invalid parameter on line: " << noLead << endl;
+		goto fail;
+	}
+	catch(UndefLabel)
+	{
+		cout << "Undefined Label on line: " << noLead << endl;
+		goto fail;
+	}
+	catch(VonError)
+	{	
+		cout << "Potential program overwrite due to address on line: " << noLead << endl;
+		goto fail;
+	}
+	catch(JmpError)
+	{	
+		cout << "Jumping to address outside of program bounds due to address on line: " << noLead << endl;
+		goto fail;
+	}
+	catch(InstError)
+	{	
+		cout << "Invalid instruction on line: " << noLead << endl;
+		goto fail;
 	}
 
-	myfile << "\n\nEND;" ;
+	myfile << "\n\nEND;";
+
 	myfile.close();
 
 	return 0;
+
+	fail:
+
+	myfile.close();
+	const char *cstr = outFileName.c_str();
+	remove(cstr);
+	return -1;
+
 }

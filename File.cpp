@@ -32,7 +32,6 @@ list<string> openFile(string fileName)
 		lines.push_back(line);
 	}
 
-
 	return lines;
 }
 
@@ -62,12 +61,8 @@ list<string> removeComments(list<string> l)
 	return l;
 }
 
-
-
-
 vector<string> decodeLine(string line)
 {
-
 	vector<string> data(3);
 	// data[0] = opCode
 	// data[1] = before label
@@ -130,54 +125,53 @@ vector<string> decodeLine(string line)
 		line.erase(posZero, posEnd-posZero);
 	}
 
-		line.erase (remove ((line).begin(), (line).end(), ' '), (line).end());
-		(line).erase (remove ((line).begin(), (line).end(), '\t'), (line).end());
-		(line).erase (remove ((line).begin(), (line).end(), ';'), (line).end());
+	line.erase (remove ((line).begin(), (line).end(), ' '), (line).end());
+	(line).erase (remove ((line).begin(), (line).end(), '\t'), (line).end());
+	(line).erase (remove ((line).begin(), (line).end(), ';'), (line).end());
 
 
-		boost::to_upper(line);
+	boost::to_upper(line);
 
-		if (line == "ADD") {
-			data[0] = "0";}
-		else if (line == "SUB") {
-			data[0] = "1";}
-		else if (line == "INC") {
-			data[0] = "2";}
-		else if (line == "DEC") {
-			data[0] = "3";}
-		else if (line == "NOT") {
-			data[0] = "4";}
-		else if (line == "AND") {
-			data[0] = "5";}
-		else if (line == "OR") {
-			data[0] = "6";}
-		else if (line == "SHR") {
-			data[0] = "7";}
-		else if (line == "JMPU") {
-			data[0] = "8";}
-		else if (line == "JMPC") {
-			data[0] = "9";}
-		else if (line == "SWAP") {
-			data[0] = "10";}
-		else if (line == "CPY") {
-			data[0] = "11";}
-		else if (line == "WR") {
-			data[0] = "12";}
-		else if (line == "RD") {
-			data[0] = "13";}
-		else if (line == "IN") {
-			data[0] = "14";}
-		else if (line == "OUT") {
-			data[0] = "15";}
-		else if (line == "PUSH") {
-			data[0] = "16";}
-		else if (line == "POP") {
-			data[0] = "17";}
-		else 
-			data[0] = "-1";
+	if (line == "ADD") {
+		data[0] = "0";}
+	else if (line == "SUB") {
+		data[0] = "1";}
+	else if (line == "INC") {
+		data[0] = "2";}
+	else if (line == "DEC") {
+		data[0] = "3";}
+	else if (line == "NOT") {
+		data[0] = "4";}
+	else if (line == "AND") {
+		data[0] = "5";}
+	else if (line == "OR") {
+		data[0] = "6";}
+	else if (line == "SHR") {
+		data[0] = "7";}
+	else if (line == "JMPU") {
+		data[0] = "8";}
+	else if (line == "JMPC") {
+		data[0] = "9";}
+	else if (line == "SWAP") {
+		data[0] = "10";}
+	else if (line == "CPY") {
+		data[0] = "11";}
+	else if (line == "WR") {
+		data[0] = "12";}
+	else if (line == "RD") {
+		data[0] = "13";}
+	else if (line == "IN") {
+		data[0] = "14";}
+	else if (line == "OUT") {
+		data[0] = "15";}
+	else if (line == "PUSH") {
+		data[0] = "16";}
+	else if (line == "POP") {
+		data[0] = "17";}
+	else 
+		data[0] = "-1";
 
-		return data;
-		
+	return data;
 }
 
 bool labelIsBefore(string line)
@@ -201,6 +195,15 @@ string toHex(int dec)
   return stream.str();
 }
 
+int toDec(string h)
+{
+	int dec;
+	stringstream ss;
+	ss  << h;
+	ss >> hex >> dec;
+	return dec;
+}
+
 string writeHeader(string fileName, string width, string depth)
 {
 	stringstream stream;
@@ -221,4 +224,9 @@ string writeHeader(string fileName, string width, string depth)
 bool isDigits(string str)
 {
     return ((str.find_first_not_of("0123456789") == -1));
+}
+
+string removeLead(string line)
+{
+	return line.substr(line.find_first_not_of(" \t"), line.length()-line.find_first_not_of(" \t"));
 }

@@ -19,4 +19,8 @@ string writeHeader(string, string, string);
 
 bool isDigits(string);
 
+int toDec(string);
+
+string removeLead(string);
+
 #endif
