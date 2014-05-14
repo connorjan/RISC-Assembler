@@ -13,3 +13,5 @@ UndefLabel::UndefLabel() : runtime_error("Undefined Label."){}
 VonError::VonError() : runtime_error("Von Neumann error."){}
 
 JmpError::JmpError() : runtime_error("Jump error."){}
+
+DepthError::DepthError() : runtime_error("Jump error."){}

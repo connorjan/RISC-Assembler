@@ -60,4 +60,12 @@ public:
 
 };
 
+class DepthError : public std::runtime_error
+{
+	
+public:
+	DepthError();
+
+};
+
 #endif

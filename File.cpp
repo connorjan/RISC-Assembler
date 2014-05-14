@@ -3,24 +3,24 @@
 
 using namespace std;
 
+//Returns a list which containts a string for each line in a file
 list<string> openFile(string fileName)
 {
 	ifstream inFile;
 
 	inFile.open(fileName, ofstream::in);
 
-	
+	//Makes sure the file exists
 	if (!inFile.is_open())
 	{
 		throw ReadError();
 	}
 
 	string line;
-
 	list<string> lines;
-
 	stringstream ss;
 
+	//Pushes the line into the list
 	while (!inFile.eof())
 	{
 		getline(inFile, line, '\n');
@@ -35,6 +35,7 @@ list<string> openFile(string fileName)
 	return lines;
 }
 
+//Prints a list of strings
 void print(list<string> l)
 {
 	for (list<string>::iterator it = l.begin(); it != l.end(); ++it)
@@ -43,6 +44,7 @@ void print(list<string> l)
 	}
 }
 
+//Removes any lines that start with a semicolon from a list of strings ()
 list<string> removeComments(list<string> l)
 {
 	string copy;
@@ -61,21 +63,22 @@ list<string> removeComments(list<string> l)
 	return l;
 }
 
+//This is where the magic happens
 vector<string> decodeLine(string line)
 {
+	//Creates the data that is needed for the decode of each line
 	vector<string> data(3);
-	// data[0] = opCode
-	// data[1] = before label
-	// data[2] = after label or address
+	// data[0] = instruction opCode
+	// data[1] = a definition label
+	// data[2] = a jump label
 
-
+	//defines strings for the label handling
 	string labelBefore;
 	string labelAfter;
 
 	int posEnd = 0;
 
-	//detects @ and removes
-
+	//Looks for the first label, adds it to data, then removes it from the line
 	int posAt = line.find_first_of('@');
 	if (posAt != -1)
 	{
@@ -95,6 +98,7 @@ vector<string> decodeLine(string line)
 
 	}
 
+	//Looks for a second label, adds it to data, then removes it from the line
 	posAt = line.find_first_of('@');
 	if (posAt != -1)
 	{
@@ -105,7 +109,7 @@ vector<string> decodeLine(string line)
 		line.erase(posAt, posEnd-posAt);
 	}
 
-	//detects address and removes
+	//Detects a hex address, adds it to data, and then removes
 	int posZero = line.find_first_of('0');
 	int posX	= line.find_first_of('X');
 	int posx 	= line.find_first_of('x');
@@ -125,13 +129,15 @@ vector<string> decodeLine(string line)
 		line.erase(posZero, posEnd-posZero);
 	}
 
+	//Removes the rest of the whitespace and semicolon from the line
 	line.erase (remove ((line).begin(), (line).end(), ' '), (line).end());
 	(line).erase (remove ((line).begin(), (line).end(), '\t'), (line).end());
 	(line).erase (remove ((line).begin(), (line).end(), ';'), (line).end());
 
-
+	//Makes the line all uppercase
 	boost::to_upper(line);
 
+	//Decodes for which instruction the line is, then returns a code for the switch in main()
 	if (line == "ADD") {
 		data[0] = "0";}
 	else if (line == "SUB") {
@@ -174,6 +180,7 @@ vector<string> decodeLine(string line)
 	return data;
 }
 
+//Checks to see if the first label that is found in a line comes before or after the instruction
 bool labelIsBefore(string line)
 {
 	string label;
@@ -184,7 +191,7 @@ bool labelIsBefore(string line)
 	return (line[0]=='@');
 }
 
-
+//Converts a decimal to a 2-bit hex number formatted like: 0x00
 string toHex(int dec)
 {
 
@@ -195,6 +202,7 @@ string toHex(int dec)
   return stream.str();
 }
 
+//Converts a hex string to an int in decimal
 int toDec(string h)
 {
 	int dec;
@@ -204,6 +212,7 @@ int toDec(string h)
 	return dec;
 }
 
+//Writes the header for the file taking into account the depth and width.
 string writeHeader(string fileName, string width, string depth)
 {
 	stringstream stream;
@@ -221,11 +230,13 @@ string writeHeader(string fileName, string width, string depth)
 	return stream.str();
 }
 
+//Returns true if a string contains only digits
 bool isDigits(string str)
 {
     return ((str.find_first_not_of("0123456789") == -1));
 }
 
+//Removes any leading whitespace on a string
 string removeLead(string line)
 {
 	return line.substr(line.find_first_not_of(" \t"), line.length()-line.find_first_not_of(" \t"));

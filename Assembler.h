@@ -60,7 +60,7 @@ private:
 	string opCode;
 	string comment;
 	string address;
-	
+
 };
 
 #endif

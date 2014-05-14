@@ -25,6 +25,7 @@ void Simple::getComment()
 	this->comment = line;
 }
 
+//Output stream overload to ouput to the file
 ostream& operator << (ostream& out, const Simple& s)
 {	
 	out << toHex(s.counter).at(2) << toHex(s.counter).at(3) << " : " << s.opCode << ";\t" << '%' << ' ' << s.comment << ' ' << '%';
