@@ -54,7 +54,7 @@ Usage:
 	6. -o <name>
 
 		Add this flag to specify the output machine code file name
-		Default: MachineCode.mif
+		Default: <filename-path>.mif
 
 
 
