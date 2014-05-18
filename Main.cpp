@@ -9,7 +9,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 
-	string usage = "usage: ./myAssembler [--help] <filename-path> [-d <depth>] [-h] [-v] [-o <name>]";
+	string usage = "usage: ./myAssembler [--help] <filename> [-d <depth>] [-h] [-v] [-o <filename>]";
 
 	if (argc < 2)
 	{
@@ -37,10 +37,10 @@ int main(int argc, char* argv[])
 					<< endl
 					<< "Options:" << endl
 					<< "--help\t\tDisplay available options" << endl
-					<< "-d <value>\tSet the depth of the .mif file" << endl
+					<< "-d <value>\tSet the depth of the .mif file. Default = 256" << endl
 					<< "-h\t\tSet the architecture mode to Harvard" << endl
 					<< "-o <name>\tSpecify the output file name" << endl
-					<< "-v\t\tSet the architecture mode to Von Neumann" << endl;
+					<< "-v\t\tSet the architecture mode to Von Neumann. This is the default." << endl;
 		return -1;
 	}
 
@@ -704,7 +704,7 @@ int main(int argc, char* argv[])
 	}
 	catch(UndefLabel)
 	{
-		cout << "error: indefined Label on line: " << removeLead(*it) << endl;
+		cout << "error: undefined Label on line: " << removeLead(*it) << endl;
 		goto fail;
 	}
 	catch(VonError)
