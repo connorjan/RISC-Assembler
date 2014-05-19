@@ -1,0 +1,152 @@
+-- Memory File
+-- Test Program 3 for CPU test
+-- Similar to test program 2, this program reads in two 4-bit numbers,
+--    multiplies these, and then displays the 8-bit product.  However,
+--    it uses the Indexed Addressing Mode for the storage of the 
+--    Read_Count_Variable.
+
+WIDTH = 4;
+DEPTH = 256;
+
+ADDRESS_RADIX = HEX;	% Can be HEX, BIN or DEC %
+DATA_RADIX = HEX;	% Can be HEX, BIN or DEC %
+
+CONTENT BEGIN
+-- Initialize register A to 0
+-- Need to do this even though the first time around through the
+--     program it is actually 0 due to the reset.
+0	:	B; % CPY - OpCode %
+1	:	1; % SUB - OpCode %
+-- This INC creates the constant value 0001
+2	:	2; % INC - OpCode %
+3	:	B; % CPY - OpCode - regB=1 %
+-- Create a value to be used in the indexed addressing mode
+4	:	2; % INC - OpCode %
+5	:	2; % INC - OpCode %
+6	:	2; % INC - OpCode %
+7	:	2; % INC - OpCode %
+8	:	A; % SWAP - OpCode - regA=1 and regB=5 %
+-- The value 0001 is used to keep track which operand is
+--    being read.  Its value is stored in the Read_Count_Variable
+9	:	C; % WR - OpCode - Read_Count_Variable = 0011 %
+A	:	A; % WR - MAH - Read_Count_Variable %
+B	:	0; % WR - MAL -    address is 0xA5 %
+-- The user sets the value of the first operand on the switches.
+-- Then, it presses and depresses the PB.  The next code sequence
+--    detects the state of the PB:
+--    depressed (1) --> pressed (0) --> depressed (1)
+C	:	E; % IN - OpCode - Check if PB is still 1 = depressed %
+D	:	1; % IN - MAH - PB %
+E	:	4; % NOT - OpCode %
+F	:	7; % SHR - OpCode %
+10	:	9; % JMPC - OpCode - If PB=1 check again %
+11	:	0; % JMPC - MAH/PCH %
+12	:	C; % JMPC - MAL/PCL %
+13	:	E; % IN - OpCode - Check if PB is still 0 = pressed %
+14	:	1; % IN - MAH - PB %
+15	:	7; % SHR - OpCode %
+16	:	9; % JMPC - OpCode - If PB=0 check again %
+17	:	1; % JMPC - MAH/PCH %
+18	:	3; % JMPC - MAL/PCL %
+-- Now read back from the memory the Read_Count_Variable
+--    and determine if the value set on the switches is
+--    that of the 1st or 2nd operand.
+19	:	D; % RD - OpCode - Read_Count_Variable %
+1A	:	A; % RD - MAH Read_Count_Variable %
+1B	:	0; % RD - MAL    address is 0xA5 %
+1C	:	7; % SHR - OpCode %
+1D	:	C; % WR - OpCode %
+1E	:	A; % WR MAH - Read_Count_Variable %
+1F	:	0; % WR MAL -    address is 0xA5 %
+20	:	9; % JMPC - OpCode %
+21	:	2; % JMPC - MAH/PCH %
+22	:	B; % JMPC - MAL/PCL %
+-- Read from the switches the value of the 1st operand,
+--    say the Multiplicand.  Store it in memory.
+23	:	E; % IN - OpCode %
+24	:	0; % IN - MAH - SW %
+25	:	C; % WR - OpCode - Multiplicand_variable %
+26	:	5; % WR - MAH - Multiplicand_variable %
+27	:	1; % WR - MAL - address is 0x51 %
+-- Jump unconditionally to check again for the PB,
+--    so that you read the 2nd operand.
+28	:	8; % JMPU - OpCode %
+29	:	0; % JMPU - MAH/PCH %
+2A	:	C; % JMPU - MAL/PCL %
+-- Read from the switches the value of the 2nd operand,
+--    say the Multiplicand.  Store it in memory.
+2B	:	E; % IN - OpCode %
+2C	:	0; % IN - MAH - SW %
+2D	:	C; % WR - OpCode - Multiplier_variable %
+2E	:	5; % WR - MAH - Multiplier_variable %
+2F	:	2; % WR - MAL - address is 0x52 %
+-- Here starts the actual multiplication portion of the code
+-- The multiplication of two 4-bit numbers results in a 
+--    product at most 8-bits wide.  This has to be stored
+--    using two 4-bit locations: one for Product_high
+--    and one for Product_low.
+30	:	B; % CPY - OpCode %
+31	:	1; % SUB - OpCode %
+32	:	C; % WR - OpCode - Product_high_variable initialized to 0%
+33	:	5; % WR - MAH - Product_high_variable %
+34	:	3; % WR - MAL - address is 0x53 %
+-- Product_low is stored in register B during the multiplication
+--    loop.
+35	:	B; % CPY - OpCode - Product_low_variable initialized to 0 in RegB %
+36	:	D; % RD - OpCode - Multiplier_Variable = LOOP %
+37	:	5; % RD - MAH %
+38	:	2; % RD - MAL %
+-- The algorithm adds the original value of the multiplicand
+--    multiplier times to the (partial) product.
+39	:	3; % DEC - OpCode %	 
+3A	:	C; % WR	- OpCode - Multiplier_Variable %
+3B	:	5; % WR - MAH %
+3C	:	2; % WR - MAL %
+-- If the current multiplier value is 0, we are done adding
+--    the original multiplicand to the (partial) product.
+3D	:	9; % JMPC - OpCode - TO DONE address that is 0x52 %
+3E	:	5; % JMPC - MAH/PCH %
+3F	:	2; % JMPC - MAL/PCL %
+-- If the current multiplier value is not 0, read the
+--    original multiplicand value and add it to the current
+--    Product_low_variable (stored in register B).
+40	:	D; % RD	- OpCode - Multiplicand_variable %
+41	:	5; % RD - MAH %
+42	:	1; % RD - MAL %
+43	:	0; % ADD - OpCode %
+44	:	B; % CPY - OpCode %
+-- If the Carry=1, we have to increment Product_high_variable
+-- Else jump to the beginning of the loop again.
+45	:	9; % JMPC - OpCode - TO LOOP address that is 0x36 %
+46	:	3; % JMPC - MAH/PCH %
+47	:	6; % JMPC - MAL/PCL %
+-- Increment Product_high_variable
+48	:	D; % RD	- OpCode - Product_high_variable %
+49	:	5; % RD - MAH %
+4A	:	3; % RD - MAL %
+4B	:	2; % INC %
+4C	:	C; % WR	- OpCode - Product_high_variable %
+4D	:	5; % WR - MAH %
+4E	:	3; % WR - MAL %
+-- Jump unconditionally to the beginning of the loop
+4F	:	8; % JMPU - OpCode - TO LOOP address that is 0x36 %
+50	:	3; % JMPU - MAH/PCH %
+51	:	6; % JMPU - MAL/PCL %
+-- The program arrives at this point if it has completed
+--    the multiplication (loop).
+-- Now write out Product_high and low to the respective
+--    displays.
+52	:	A; % SWAP - OpCode = DONE %
+53	:	F; % OUT - OpCode - display_low/right %
+54	:	3;
+55	:	D; % RD	- OpCode - Product_high_variable %
+56	:	5; % RD - MAH %
+57	:	3; % RD - MAL %
+58	:	F; % OUT - OpCode - display_high/left %
+59	:	2;
+-- Jump to the beginning of the program and wait for another 
+--    two values to multiply.
+5A	:	8; % JMPU - OpCode - Start %
+5B	:	0; % JMPU - MAH/PCH %
+5C	:	0; % JMPU - MAL/PCL %
+END;
