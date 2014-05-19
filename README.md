@@ -19,7 +19,9 @@ A basic assembler for a custom set of RISC architectures.
 
 	$ git clone http://github.com/connorjan/RISC-Assembler; cd RISC-Assembler
 
-4. Build the project using make:
+4. Verify that the makefile containts the correct path to your installation of boost. 
+
+5. Build the project using make:
 
 	$ make
 

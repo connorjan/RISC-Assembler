@@ -8,8 +8,7 @@ Installation (mac/linux only as of now):
 		
 		$ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 
-	2. Install the c++ boost library (if already installed edit makefile to use correct directory) 
-		and git from their repo using the installer of your choice:
+	2. Install the c++ boost library and git from their repo using the installer of your choice:
 
 		$ brew install boost git
 
@@ -17,7 +16,9 @@ Installation (mac/linux only as of now):
 		
 		$ git clone http://github.com/connorjan/RISC-Assembler; cd RISC-Assembler
 
-	4. Build the project using make:
+	4. Verify that the makefile containts the correct path to your installation of boost.
+
+	5. Build the project using make:
 
 		$ make
 
@@ -44,12 +45,10 @@ Usage:
 	4. -h
 
 		Add this flag to indicate a Harvard Memory Architecture
-		Default: -v
 
 	5. -v 
 
-		Add this flag to indicate a Von Neumann Memory Architecture
-		Default: -v
+		Add this flag to indicate a Von Neumann Memory Architecture (this is the default)
 
 	6. -o <name>
 
