@@ -11,16 +11,16 @@ Prerequisites: [git](http://git-scm.com/book/en/Getting-Started-Installing-Git),
 1. Clone the project from the git repo:
 
 $
-'''
+```
 git clone http://github.com/connorjan/RISC-Assembler; cd RISC-Assembler
-'''
+```
 
 2. Build the project using make:
 
 $
-'''
+```
 make
-'''
+```
 
 ##Usage:
 
