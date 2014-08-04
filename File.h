@@ -23,4 +23,6 @@ int toDec(string);
 
 string removeLead(string);
 
+string makeUpper(string);
+
 #endif

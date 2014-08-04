@@ -6,29 +6,20 @@ A basic assembler for a custom set of RISC architectures.
 
 ##Installation (Mac/Linux only as of now):
 
-1. (MAC ONLY, LINUX USERS GOTO #2) Install homebrew:
+	Prerequisites: [git](http://git-scm.com/book/en/Getting-Started-Installing-Git), [make](https://developer.apple.com/downloads/index.action?name=command%20line%20tools)
 
-	$ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+	1. Clone the project from the git repo:
+		
+		$ git clone http://github.com/connorjan/RISC-Assembler; cd RISC-Assembler
 
-2. Install the c++ boost library (if already installed edit makefile to use correct directory) 
-	and git from their repo using the installer of your choice:
+	2. Build the project using make:
 
-	$ brew install boost git
-
-3. Clone the project from the git repo:
-
-	$ git clone http://github.com/connorjan/RISC-Assembler; cd RISC-Assembler
-
-4. Verify that the makefile containts the correct path to your installation of boost. 
-
-5. Build the project using make:
-
-	$ make
+		$ make
 
 
 ##Usage:
 
-./myAssembler [--help] \<infilename-path\> [-d \<depth\>] [-h] [-v] [-o \<outfilename-path\>]
+./myAssembler [--help] \<input-filename-path\> [-d \<depth\>] [-h] [-v] [-o \<outfilename-path\>]
 
 
 1. --help

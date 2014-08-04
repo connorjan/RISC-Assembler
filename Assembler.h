@@ -11,7 +11,7 @@
 #include <ctype.h>
 #include <iomanip>
 #include <cstdio>
-#include <boost/algorithm/string/case_conv.hpp>
+#include <algorithm>
 
 using namespace std;
 

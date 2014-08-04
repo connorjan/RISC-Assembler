@@ -391,7 +391,7 @@ int main(int argc, char* argv[])
 					}
 
 					//makes the address uppercase
-					boost::to_upper(address);
+					address = makeUpper(address);
 
 					//CHecks to make sure the jump address does not exceed the program length
 					if (toDec(address) > totalLines)
@@ -437,7 +437,7 @@ int main(int argc, char* argv[])
 						throw InstError();
 					}
 
-					boost::to_upper(address);
+					address = makeUpper(address);
 
 					if (toDec(address) > totalLines)
 					{
@@ -514,7 +514,7 @@ int main(int argc, char* argv[])
 						throw InstError();
 					}
 
-					boost::to_upper(address);
+					address = makeUpper(address);
 
 					//Checks to see if it is in Von Neumann mode so the user
 					//does not overwrite the program
@@ -556,7 +556,7 @@ int main(int argc, char* argv[])
 						throw InstError();
 					}
 
-					boost::to_upper(address);
+					address = makeUpper(address);
 
 					if ((mode != "h") and ((toDec(address) < totalLines)))
 					{
@@ -595,7 +595,7 @@ int main(int argc, char* argv[])
 						throw InstError();
 					}
 
-					boost::to_upper(address);
+					address = makeUpper(address);
 
 					myInst = new InInst(*it,counter, address);
 
@@ -630,7 +630,7 @@ int main(int argc, char* argv[])
 						throw InstError();
 					}
 
-					boost::to_upper(address);
+					address = makeUpper(address);
 
 					myInst = new OutInst(*it,counter, address);
 

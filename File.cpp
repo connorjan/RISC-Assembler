@@ -135,7 +135,7 @@ vector<string> decodeLine(string line)
 	(line).erase (remove ((line).begin(), (line).end(), ';'), (line).end());
 
 	//Makes the line all uppercase
-	boost::to_upper(line);
+	line = makeUpper(line);
 
 	//Decodes for which instruction the line is, then returns a code for the switch in main()
 	if (line == "ADD") {
@@ -240,4 +240,10 @@ bool isDigits(string str)
 string removeLead(string line)
 {
 	return line.substr(line.find_first_not_of(" \t"), line.length()-line.find_first_not_of(" \t"));
+}
+
+string makeUpper(string str)
+{
+	transform(str.begin(), str.end(),str.begin(), ::toupper);
+	return str;
 }

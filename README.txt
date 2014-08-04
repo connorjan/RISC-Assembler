@@ -1,24 +1,16 @@
 RISC Assembler by Connor Goldberg and Matthew Zachary
 -----------------------------------------------------
 
-Installation (mac/linux only as of now):
+Installation (Mac/Linux only as of now):
 ---------------------------------------
 
-	1. (MAC ONLY, LINUX USERS GOTO #2) Install homebrew:
-		
-		$ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+	Prerequisites: git, make
 
-	2. Install the c++ boost library and git from their repo using the installer of your choice:
-
-		$ brew install boost git
-
-	3. Clone the project from the git repo:
+	1. Clone the project from the git repo:
 		
 		$ git clone http://github.com/connorjan/RISC-Assembler; cd RISC-Assembler
 
-	4. Verify that the makefile containts the correct path to your installation of boost.
-
-	5. Build the project using make:
+	2. Build the project using make:
 
 		$ make
 
@@ -26,7 +18,7 @@ Installation (mac/linux only as of now):
 Usage:
 -----
 
-	./myAssembler [--help] <filename-path> [-d <depth>] [-h] [-v] [-o <name>]
+	./myAssembler [--help] <input-filename-path> [-d <depth>] [-h] [-v] [-o <name>]
 
 	
 	1. --help
@@ -55,5 +47,5 @@ Usage:
 		Add this flag to specify the output machine code file name
 		Default: <filename-path>.mif
 
-
+By Connor Goldberg and Matt Zachary.
 
