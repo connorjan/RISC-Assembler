@@ -1,6 +1,5 @@
 CC=g++
-BOOST=/usr/local/Cellar/boost/1.55.0/include/boost
-CFLAGS=-c -I$(BOOST) -std=c++11
+CFLAGS=-c -std=c++11
 LDFLAGS=
 SOURCES=Main.cpp Assembler.cpp File.cpp Exception.cpp SimpleInst.cpp AdvancedInst.cpp
 OBJECTS=$(SOURCES:.cpp=.o)

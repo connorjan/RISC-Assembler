@@ -9,13 +9,18 @@ A basic assembler for a custom set of RISC architectures.
 Prerequisites: [git](http://git-scm.com/book/en/Getting-Started-Installing-Git), [make](https://developer.apple.com/downloads/index.action?name=command%20line%20tools)
 
 1. Clone the project from the git repo:
-		
-	$ git clone http://github.com/connorjan/RISC-Assembler; cd RISC-Assembler
+
+$
+'''
+git clone http://github.com/connorjan/RISC-Assembler; cd RISC-Assembler
+'''
 
 2. Build the project using make:
 
-	$ make
-
+$
+'''
+make
+'''
 
 ##Usage:
 
